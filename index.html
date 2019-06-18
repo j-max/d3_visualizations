@@ -122,19 +122,19 @@ var h = 400;
 			.text("2017/18 Graduation Rates vs. Total Student Population")
 
 	svg.append("g")
-			.attr("class", "axis")
+			.attr("class", "x axis")
 			.attr("transform", "translate("+padding +",0)")
 			.call(yAxis);
 
 	svg.append("g")
-			.attr("class", "axis xAxis")
+			.attr("class", "y axis")
 			.attr("transform", "translate(0," +(h-padding) + ")")
 			.call(xAxis);
 
 d3.select("#low_income")
 	.on("click", function() {
-			svg.selectAll("circle").remove();
-			svg.select('.xAxis').remove()
+//			svg.selectAll("circle").remove();
+//		svg.select('.xAxis').remove()
 //create x and y axis
 		var xScale = d3.scaleLinear()
 								.domain([0, d3.max(dataset, function(d){
@@ -148,8 +148,7 @@ d3.select("#low_income")
 
 		svg.selectAll("circle")
 			.data(dataset)
-			.enter()
-			.append("circle")
+			.transition()
 			.attr("cx", function(d) {
 			// three added because the data point with 1 student appeared to be left of the y axis.
 			//the data point needs to be removed
@@ -173,36 +172,39 @@ d3.select("#low_income")
 			  });
 
 //	Add axis labels
-	 svg.selectAll("text")
-	 		.attr("class", "x label")
-	 		.attr("text-anchor", "end")
-	 		.attr("x", w/2+50)
-	 		.attr("y", h-2)
-	 		.text("Low Income Percentage");
-	
-	 svg.append("text")
-	 		.attr("class", "title")
-	 		.attr("text-anchor", "end")
-	 		.attr("x", w/2 + 50)
-	 		.attr("y", padding + 0)
-	 		.text("2017/18 Graduation Rates vs. Low Income Percentage")
-		var xAxis = d3.axisBottom()
-							.scale(xScale);
-		var yAxis = d3.axisLeft()
-								.scale(yScale);
+				 svg.selectAll("text")
+						.attr("class", "x label")
+						.attr("text-anchor", "end")
+						.attr("x", w/2+50)
+						.attr("y", h-2)
+						.text("Low Income Percentage");
+
+				 svg.append("text")
+						.attr("class", "title")
+						.attr("text-anchor", "end")
+						.attr("x", w/2 + 50)
+						.attr("y", padding + 0)
+						.text("2017/18 Graduation Rates vs. Low Income Percentage")
 		
-	svg.append("g")
-			.attr("class", "axis")
-			.attr("transform", "translate(0," +(h-padding) + ")")
-			.call(xAxis);
-			
+		
 
-	svg.append("g")
-			.attr("class", "axis")
-			.attr("transform", "translate("+padding +",0)")
-			.call(yAxis);
+			var xAxis = d3.axisBottom()
+				 						.scale(xScale);
+				 	var yAxis = d3.axisLeft()
+				 							.scale(yScale);
+				
+				 svg.append("g")
+				 		.attr("class", "axis")
+				 		.attr("transform", "translate(0," +(h-padding) + ")")
+				 		.call(xAxis);
+				
+				
+				 svg.append("g")
+				 		.attr("class", "axis")
+				 		.attr("transform", "translate("+padding +",0)")
+				 		.call(yAxis);
 
-});
+			});
 
 
 d3.select("#total_students")
@@ -222,8 +224,7 @@ d3.select("#total_students")
 
 		svg.selectAll("circle")
 			.data(dataset)
-			.enter()
-			.append("circle")
+			.transition()
 			.attr("cx", function(d) {
 			// three added because the data point with 1 student appeared to be left of the y axis.
 			//the data point needs to be removed
