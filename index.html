@@ -24,7 +24,8 @@ body {
 <body>
 <div id = "option">
 
-	<h1 id="low_income">Graph Low Income vs Graduation Rate</h1>
+	<h1 id="low_income">Plot Low Income Student Percentage vs Graduation Rate</h1>
+	<h1 id="total_students">Plot Total Student Count vs Graduation Rate</h1>
 	<!-- <input name = "total_students" -->
 	<!-- 			type = "button" -->
 	<!-- 			value= "Plot Total Students" -->
@@ -185,6 +186,80 @@ d3.select("#low_income")
 	 		.attr("x", w/2 + 50)
 	 		.attr("y", padding + 0)
 	 		.text("2017/18 Graduation Rates vs. Low Income Percentage")
+		var xAxis = d3.axisBottom()
+							.scale(xScale);
+		var yAxis = d3.axisLeft()
+								.scale(yScale);
+		
+	svg.append("g")
+			.attr("class", "axis")
+			.attr("transform", "translate(0," +(h-padding) + ")")
+			.call(xAxis);
+			
+
+	svg.append("g")
+			.attr("class", "axis")
+			.attr("transform", "translate("+padding +",0)")
+			.call(yAxis);
+
+});
+
+
+d3.select("#total_students")
+	.on("click", function() {
+			svg.selectAll("circle").remove();
+			svg.select('.xAxis').remove()
+//create x and y axis
+		var xScale = d3.scaleLinear()
+								.domain([0, d3.max(dataset, function(d){
+																		return d[3]; })])
+									.range([padding, w-padding*2]);
+		var yScale = d3.scaleLinear()
+						 .domain([0, d3.max(dataset, function(d) {
+															return d[2]; })])
+							 .range([h-padding, padding+20]);
+
+
+		svg.selectAll("circle")
+			.data(dataset)
+			.enter()
+			.append("circle")
+			.attr("cx", function(d) {
+			// three added because the data point with 1 student appeared to be left of the y axis.
+			//the data point needs to be removed
+									return xScale(d[3])+3;})
+			.attr("cy", function(d) {
+									return yScale(d[2]);})
+			.attr("r", 3)
+		
+			.on("mouseover", function(d) {
+			 		div.transition()
+			  				.duration(200)
+			  				.style("opacity", .9);
+			  		div.html("Total Student Count: " + d[3]+
+			  								"<br/>" + "Graduation Rate: " + d[2]+
+			  								"<br/>" + "School: " + d[1]);
+			  })
+			 .on("mouseout", function (d) {
+			  		div.transition()
+			  		.duration(500)
+			  		.style("opacity", 0);
+			  });
+
+//	Add axis labels
+	 svg.selectAll("text")
+	 		.attr("class", "x label")
+	 		.attr("text-anchor", "end")
+	 		.attr("x", w/2+50)
+	 		.attr("y", h-2)
+	 		.text("Total Student Count");
+	
+	 svg.append("text")
+	 		.attr("class", "title")
+	 		.attr("text-anchor", "end")
+	 		.attr("x", w/2 + 50)
+	 		.attr("y", padding + 0)
+	 		.text("2017/18 Graduation Rates vs. Total Student Count")
 		var xAxis = d3.axisBottom()
 							.scale(xScale);
 		var yAxis = d3.axisLeft()
